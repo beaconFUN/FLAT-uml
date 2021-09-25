@@ -1,0 +1,24 @@
+@startuml 同意フロー
+
+title 同意フロー
+
+alt successful case
+    起動画面 -> 権限確認画面
+
+else deny
+    起動画面 ->x 権限確認画面: 拒否
+    権限確認画面 --> 起動画面: ファイルIO
+    権限確認画面 --> 起動画面: Bluetooth
+    権限確認画面 --> 起動画面: カメラ
+
+end
+
+alt successful case
+    権限確認画面 -> 利用規約画面: 同意
+
+else deny
+    権限確認画面 ->x 利用規約画面: 拒否
+    利用規約画面 --> 起動画面
+end
+
+@enduml

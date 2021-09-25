@@ -1,0 +1,44 @@
+@startuml アカウント登録
+
+title アカウント登録
+
+activate アカウント登録画面
+
+alt successful case
+
+    アカウント登録画面 -> API: {name: hoge, pass: pass}
+
+    activate API
+
+    API -> API: generate ID
+
+    activate DB
+
+    alt successful case
+
+        API  -> DB: Insert
+        DB --> API: Ok
+
+    API --> アカウント登録画面:Ok
+
+    else DB down
+        API  ->x DB: 監視で弾きたい
+        API --> アカウント登録画面: Failure
+    else SQL error
+        API  ->x DB: ロジックミス
+        API --> アカウント登録画面: Failure
+    end
+
+
+else network error
+
+    アカウント登録画面 ->x API: offline
+    API --> アカウント登録画面: Failure
+else API server down
+
+    アカウント登録画面 ->x API: 管理者に連絡
+    API --> アカウント登録画面: Failure
+
+end
+
+@enduml
