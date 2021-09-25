@@ -1,0 +1,30 @@
+@startuml 友達追加フロー
+
+participant ホーム画面 order 10
+participant 友達追加ボタン order 20
+participant 友達登録成功画面 order 30
+participant 友達登録失敗画面 order 40
+participant 友達追加画面 order 50
+participant API order 60
+participant DB order 70
+
+activate 友達追加ボタン
+友達追加ボタン -> 友達追加画面 --++ : 押下
+note over 友達追加画面, API: - 端末オンライン\n- APIサーバーの疎通確認
+
+友達追加画面 -> API ++ : 自分と相手のIDをPOST
+
+note over API, DB: - 端末オンライン\n- DBサーバーの疎通確認
+API -> DB ++:相手のIDの存在確認
+return return record
+alt exist
+    API -> DB ++: 友達情報を追加
+    return Ok
+    API -> 友達登録成功画面 ++ : Ok
+    友達登録成功画面 -> ホーム画面 --++
+else not exist
+    API -> 友達登録失敗画面 ++ : Bad Request
+    友達登録失敗画面 -> 友達追加画面 --: 再度友達登録
+end
+
+@enduml
