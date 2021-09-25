@@ -1,0 +1,42 @@
+@startuml 友だち一覧
+title 友だち一覧
+
+activate 友達一覧画面
+
+loop
+
+    友達一覧画面 -> API ++: 自分のIDをPOST
+
+    API -> DB ++: 友達一覧を取得
+
+    return
+
+    return 結果を返却
+
+    opt 友達が0人
+        友達一覧画面 -> 友達一覧画面: 友達登録に誘導
+    end
+
+    alt 初回起動
+        友達一覧画面 -> API ++: アイコンを要求
+        API -> DB ++ : アイコンパスを要求
+        return
+
+        API -> WebStorage ++: アイコン画像を要求
+        return
+        return
+
+        友達一覧画面 -> LocalStorage ++: 画像をキャッシュ
+        return
+    else 2回目以降
+        友達一覧画面 -> LocalStorage ++: 画像をフェッチ
+        return
+
+    end
+
+    note right 友達一覧画面:  アイコンがヒットしない場合、デフォルト画像を表示
+    友達一覧画面 -> 友達一覧画面: 友達一覧を表示
+
+end
+
+@enduml
