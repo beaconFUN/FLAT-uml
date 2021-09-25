@@ -1,0 +1,12 @@
+@startuml Android
+
+' Androidっぽく書くのはもうちょっと勉強したらやります
+
+package main {
+    class MainActivity{
+        + ほげ
+        - ふが()
+    }
+}
+
+@enduml
