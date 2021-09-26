@@ -5,7 +5,9 @@ hide empty methods
 
 title Backend
 
-class Main{}
+class Main{
+    + endpoints
+}
 Main o-- user.UserContoroller
 Main o-- friend.FriendController
 Main o-- login.LoginController
