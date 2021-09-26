@@ -10,27 +10,34 @@ class Main{
 }
 Main o-- user.UserContoroller
 Main o-- friend.FriendController
-Main o-- login.LoginController
 
 package user{
     class UserContoroller{
-        + updateBeacon()
-        + updateIcon()
-        + updateName()
-
+        + model
+        + view
     }
 
     UserContoroller --> UserModel
     UserContoroller o--> UserView
     UserModel --> DB.UserTable
+    UserModel --> WebStorage.Storage
 
     class UserView<<(V, #ffccff)>>{
-
+        + dataFormatting()
     }
 
     class UserModel<<(M, #ffffff)>>{
-        + some_logic()
-        + getUser(ID)
+        + updateName(ID, Name)
+        + updateStatus(ID, status)
+        + updateIcon(ID, Icon)
+        + updateBeacon(ID, Beacon)
+        + follow(ID_1, ID_2)
+        - generateID() -> String
+        - hashWithSalt(password)
+        - existUser() -> bool
+        + login(ID, Password)
+        + registor(Name, Password)
+        + getUser(ID) -> User
 
     }
 
@@ -38,64 +45,56 @@ package user{
 
 package friend{
     class FriendController{
-        + getFriends(ID) -> User[]
-        + addFriends(ID_1, ID_2)
-        + approveFriends(ID_1, ID_2)
+        + model
+        + view
     }
 
     FriendController --> FriendModel
     FriendController o--> FriendView
-    FriendModel -> DB.FriendTable
+    FriendModel --> DB.FriendTable
 
     class FriendView<<(V, #ffccff)>>{
+        + dataFormatting()
     }
 
     class FriendModel<<(M, #ffffff)>>{
-        + some_logic()
-        + getFriendsID()
+        + getFriends(ID) -> User[] with MutualFlag
+        + addFriends(ID_1, ID_2)
+        + deleteFriend(ID_1, ID_2)
+        + blockFriend(ID_1, ID_2)
+        + unBlockFriend(ID_1, ID_2)
+        + registor()
+        - insertUser(ID, Name, hashedPassword1)
+        - getFriendsID()
     }
 }
 
-package login{
-    class LoginController{
-        + getLogins(ID) -> User[]
-        + addLogins(ID_1, ID_2)
-        + approveLogins(ID_1, ID_2)
-    }
-
-    LoginController --> LoginModel
-    LoginController o--> LoginView
-    LoginModel -> DB.LoginInfoTable
-
-    class LoginView<<(V, #ffccff)>>{
-    }
-
-    class LoginModel<<(M, #ffffff)>>{
-        + some_logic()
-        + getLoginsID()
-    }
-}
 
 package DB {
 
     class UserTable<<(D, #ffffff)>>{
         + ID
         + Name
+        + Status
         + IconPath
         + Beacon
+        + HashedPassword
     }
 
     class FriendTable<<(D, #ffffff)>>{
-        + ID_1: String
-        + ID_2: String
-        + MutualFlag: bool
-        + DeletedFlag: bool
+        + ID
+        + user_ID: String
+        + follow_ID: String
+        + BlockedFlag: bool
     }
 
-    class LoginInfoTable<<(D, #ffffff)>>{
-        + ID
-        + HashedPasswordWithSolt
+}
+
+package WebStorage{
+    class Storage{
+        + icon_blob
     }
 }
+
 
 @enduml
