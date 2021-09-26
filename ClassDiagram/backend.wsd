@@ -1,0 +1,99 @@
+@startuml project
+
+hide empty fields
+hide empty methods
+
+title Backend
+
+class Main{}
+Main o-- user.UserContoroller
+Main o-- friend.FriendController
+Main o-- login.LoginController
+
+package user{
+    class UserContoroller{
+        + updateBeacon()
+        + updateIcon()
+        + updateName()
+
+    }
+
+    UserContoroller --> UserModel
+    UserContoroller o--> UserView
+    UserModel --> DB.UserTable
+
+    class UserView<<(V, #ffccff)>>{
+
+    }
+
+    class UserModel<<(M, #ffffff)>>{
+        + some_logic()
+        + getUser(ID)
+
+    }
+
+}
+
+package friend{
+    class FriendController{
+        + getFriends(ID) -> User[]
+        + addFriends(ID_1, ID_2)
+        + approveFriends(ID_1, ID_2)
+    }
+
+    FriendController --> FriendModel
+    FriendController o--> FriendView
+    FriendModel -> DB.FriendTable
+
+    class FriendView<<(V, #ffccff)>>{
+    }
+
+    class FriendModel<<(M, #ffffff)>>{
+        + some_logic()
+        + getFriendsID()
+    }
+}
+
+package login{
+    class LoginController{
+        + getLogins(ID) -> User[]
+        + addLogins(ID_1, ID_2)
+        + approveLogins(ID_1, ID_2)
+    }
+
+    LoginController --> LoginModel
+    LoginController o--> LoginView
+    LoginModel -> DB.LoginInfoTable
+
+    class LoginView<<(V, #ffccff)>>{
+    }
+
+    class LoginModel<<(M, #ffffff)>>{
+        + some_logic()
+        + getLoginsID()
+    }
+}
+
+package DB {
+
+    class UserTable<<(D, #ffffff)>>{
+        + ID
+        + Name
+        + IconPath
+        + Beacon
+    }
+
+    class FriendTable<<(D, #ffffff)>>{
+        + ID_1: String
+        + ID_2: String
+        + MutualFlag: bool
+        + DeletedFlag: bool
+    }
+
+    class LoginInfoTable<<(D, #ffffff)>>{
+        + ID
+        + HashedPasswordWithSolt
+    }
+}
+
+@enduml
