@@ -1,0 +1,141 @@
+@startuml android
+
+hide empty fields
+hide empty methods
+
+package mainActivity{
+    class MainActivity{
+        saveInstanceState
+    }
+
+    class AddFriendButton{
+        + setOnClickListener()
+    }
+    interface OnCLickListener{}
+
+    MainActivity --> addFriend.AddFriendFlagment
+    MainActivity --> friendList.FriendListFlagment
+    MainActivity --> map.MapFlagment
+    MainActivity o-- AddFriendButton
+    OnCLickListener <|.. AddFriendButton
+}
+
+
+package addFriend{
+
+    class AddFriendFlagment{}
+
+    class PromptText{
+        TextView
+    }
+
+    class InputFriendID {
+        TextView
+        ImageButton
+    }
+
+    class User{
+        Icon: ImageView
+        Name: TextView
+    }
+
+    class AddButton{
+        TextView
+        + setOnClickListener()
+    }
+
+    class FriendNotExistText {
+        TextView
+    }
+
+    package addFriendViewModel{
+        class API{
+            + getFriends()
+        }
+    }
+
+    AddFriendFlagment o-- PromptText
+    AddFriendFlagment o-- InputFriendID
+    AddFriendFlagment o-- User
+    AddFriendFlagment o-- AddButton
+    AddFriendFlagment o-- FriendNotExistText
+}
+
+package friendList{
+    class FriendListFlagment{
+        + accessApiSomething()
+        + updateRoom()
+        + getRoom()
+        + thread
+    }
+
+    class ReturnBar{
+        ImageView
+        TextView
+    }
+
+    interface ActionBar{}
+    ReturnBar ..|> ActionBar
+
+    class DescText {
+        + Text: TextView
+    }
+
+    class MutualFriends{
+        + Friends: Friend[]
+        + Adapter
+        + ViewHolder
+    }
+
+    class OneSideFriends{
+        + Friends: OneSideFriend[]
+        + Adapter
+        + ViewHolder
+    }
+
+    class Friend{
+        + Icon: ImageView
+        + Name: TextView
+        + Status: ImageView
+        + Location: TextView
+    }
+
+    class OneSideFriend{
+        + ApproveButton: ImageButton
+        + RejectButton: ImageButton
+    }
+
+    abstract RecyclerView
+
+    package friendListViewModel{
+        class FriendAPI{
+            + getFriends()
+            + splitFriendsMutualAndOneSide()
+        }
+    }
+
+    FriendListFlagment o-- ReturnBar
+    FriendListFlagment o-- MutualFriends
+    FriendListFlagment o-- OneSideFriends
+    FriendListFlagment o-- DescText
+    Friend <|-- OneSideFriend
+    RecyclerView --|> MutualFriends
+    RecyclerView --|> OneSideFriends
+    FriendListFlagment --> friendListViewModel
+    ' Friend --> MutualFriends
+    ' OneSideFriend --> OneSideFriends
+}
+
+package Repository {
+    class User{
+        + DataClassDefinition()
+    }
+
+    class Users{}
+}
+
+Repository --> Model
+
+package Model {}
+
+@enduml
