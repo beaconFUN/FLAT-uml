@@ -1,30 +1,40 @@
 @startuml 友達追加フロー
 
-' participant ホーム画面 order 10
-participant 友達追加ボタン order 20
+' participant 友達一覧画面 order 10
+participant 友達一覧画面 order 20
 ' participant 友達登録成功画面 order 30
 ' participant 友達登録失敗画面 order 40
 participant 友達追加画面 order 50
 participant API order 60
 participant DB order 70
 
-activate 友達追加ボタン
-友達追加ボタン -> 友達追加画面 --++ : 押下
-note over 友達追加画面, API: - 端末オンライン\n- APIサーバーの疎通確認
+activate 友達一覧画面
+友達一覧画面 -> 友達追加画面 --++ : 友達追加ボタン押下
+note over 友達追加画面, API: - 端末オンライン\n- APIサーバーの疎通確認\n - IDバリデーション
 
-友達追加画面 -> API ++ : 自分と相手のIDをPOST
+友達追加画面 -> API ++ : 友達検索：キーボードの確定\n自分と相手のIDをPOST
 
 note over API, DB: - 端末オンライン\n- DBサーバーの疎通確認
 API -> DB ++:相手のIDの存在確認
-return return record
+return User
 alt exist
-    API -> DB ++: 友達情報を追加
-    return Ok
-    API -> 友達追加画面 : Ok
-    ' 友達登録成功画面 -> ホーム画面 --++
+    API -> 友達追加画面: {ID, 名前, アイコン}
+    友達追加画面 -> 友達追加画面 ++ : 追加したい友達を表示
+
+    alt 友達申請
+        友達追加画面 -> API: 申請ボタン押下
+        API -> DB ++: 友達情報を追加
+        return Ok
+        API --> 友達追加画面 : Ok
+        deactivate 
+    else ID再入力
+        note over 友達追加画面, API: 再度検索
+    end
 else not exist
-    API -> 友達追加画面 : Bad Request
+    API --> 友達追加画面 : Bad Request
     友達追加画面 -> 友達追加画面 : 再度友達登録
 end
 
+==キャンセル==
+友達追加画面 -> 友達一覧画面: キャンセルボタンを押下
 @enduml
